@@ -20,4 +20,86 @@ int			ft_get_max(int num1, int num2)
 		return (num2);
 }
 
+int			ft_get_hexlen(size_t p)
+{
+	int		count;
 
+	count = 0;
+	while (p > 0)
+	{
+	//s	printf("%zu %d\n", p, count);
+		p /= 16;
+		count++;		
+	}
+	return (count);
+}
+
+char		*ft_change_hex(size_t p, t_arg *arg, t_op *op)
+{
+	char	*hex;
+	int		len;
+	char	*x;
+	char	*X;
+
+	x = "0123456789abcdef";
+	X = "0123456789ABCDEF";
+	len = ft_get_hexlen(p);
+	hex = (char *)ft_calloc(sizeof(char), len + 1);
+	if (!hex)
+		return (NULL);		
+	if (p == 0 && op->dot == 1)
+	{
+		hex = ft_strdup("0");
+		return (hex);
+	}
+	while (--len >= 0)
+	{
+		if (arg->x == 1 || arg->p == 1)
+		{
+			hex[len] = x[p % 16];
+			p /= 16;
+		}
+		else if (arg->X == 1)
+		{
+			hex[len] = X[p % 16];
+			p /= 16;			
+		}
+		//len--;
+	//	printf("%d\n", len);
+	}
+	return (hex);
+}
+
+void		ft_putnbr(int nb, t_op *op)
+{	
+	if (nb < 0)
+	{		
+		write(1, "-", 1);
+		
+	}
+	if (nb == -2147483648)
+	{
+	//	write(1, "-", 1);		
+		ft_putzero(op);
+		write(1, "2147483648", 10);
+	//	op->total += 11;
+	}
+	if (nb < 0)
+	{
+	//	ft_putchar_fd('-', 1);
+		nb *= -1;
+	//	op->miner = 1;				
+	}	
+	ft_putzero(op);
+	if (nb >= 0 && nb <= 9)
+	{
+		ft_putchar_fd(nb + '0', 1);
+	//	op->total += 1;
+	}
+	if (nb >= 10)
+	{
+		ft_putnbr(nb / 10, op);
+		ft_putchar_fd(nb % 10 + '0', 1);
+	//	op->total += 1;
+	}	
+}

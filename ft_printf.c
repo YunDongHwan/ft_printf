@@ -26,5 +26,5 @@ int			ft_printf(const char *format, ...)
 	va_start(ap, format);
 	temp_format = (char *)format;
     chk = ft_checkvalid(ap, &temp_format, &op, &arg);
-	return (0);
+	return (op.total);
 }

@@ -12,18 +12,43 @@
 
 #include "ft_printf.h"
 
-void		ft_putblank(int	i)
-{
-	while (i--)
+void		ft_putblank(t_op *op)
+{	
+	while (op->blank > 0)
+	{
 		ft_putchar_fd(' ', 1);
+		op->blank--;
+	}
 }
 
-void		ft_reset_op(t_op *op)
+void		ft_putzero(t_op *op)
+{		
+	while (op->zerolen > 0)
+	{		
+		ft_putchar_fd('0', 1);		
+		op->zerolen--;
+	}
+}
+
+void		ft_reset_op(t_op *op, t_arg *arg)
 {
 	op->sign = 0;
+	op->miner = 0;
 	op->zero = 0;
+	op->zerolen = 0;
 	op->width = 0;
 	op->precision = 0;
 	op->blank = 0;
 	op->total = 0;
+	op->dot = 1;
+	op->nodot = 0;
+	arg->c = 0;
+	arg->s = 0;
+	arg->p = 0;
+	arg->d = 0;
+	arg->i = 0;
+	arg->u = 0;
+	arg->x = 0;
+	arg->X = 0;
+	arg->per = 0;
 }

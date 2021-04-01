@@ -14,13 +14,9 @@
 
 int			ft_checkargtype(char **format, t_arg *arg)
 {
-//	printf("check arg foramt : %c\n", **format);
+//			printf("check arg foramt : %c\n", **format);
 	if (**format == 'c')
-	{
-//		printf("checkarg before : %d\n", arg->c);
 		arg->c = 1;
-//		printf("checkarg after : %d\n", arg->c);
-	}
 	else if ( **format == 's')
 		arg->s = 1;
 	else if (**format == 'p')	
@@ -51,7 +47,7 @@ int			ft_checkflag(char **format, t_op *op)
 			op->sign = 1;
 		else if (**format == '0')
 			op->zero = 1;
-		(*format)++;			
+		(*format)++;		
 	}
 //	printf("check format in flag %c\n", **format);
 	return (1);
@@ -63,41 +59,55 @@ int				ft_checkprecision(va_list ap, char **format, t_op *op)
 {
 	if (**format == '.') //식별자가 뒤에 없으면 에러처리
 	{
-		if (*(++(*format)))
+		(*format)++;
+		if ((**format) == '*' || (**format >= '0' && **format <= '9'))
 		{
-//			printf("checkast : %c\n", **format);
 			if (**format == '*')
-				op->precision = va_arg(ap, int);
-//			printf("op->precision : %d\n", op->precision);
-			while (**format >= 0 && **format <= 9)
 			{
-				op->precision = (op->precision * 10) + **format;
+				op->precision = va_arg(ap, int);				
+				(*format)++;
+			}	
+			while (**format >= '0' && **format <= '9')
+			{
+				op->precision = (op->precision * 10) + **format - 48;
 				(*format)++;
 			}
-			return (1);
+			if (op->precision == 0)
+				op->dot = 0;			
 		}
-		return (0);
+		else
+			op->dot = 0;
 	}
+	else
+		op->nodot = 1;
 	return (1);
 }
 
 
 int			ft_checkwidth(va_list ap, char **format, t_op *op)
 {
-	int		i;
-
-	i = 0;
-//	printf("check format in width %c\n", **format);
-//	printf("ast : %c\n", **format);
-		while (((**format >= '0') && (**format <= '9')))
+	//		printf("check format in width %c\n", **format);
+	while (((**format >= '0') && (**format <= '9')))
 	{
-		i = ft_atoi(*format);
-		op->width = (op->width * 10) + i;
+		op->width = (op->width * 10) + (**format) - 48;
 		(*format)++;
 	}
-	if (*(*format)++ == '*') 
-		op->width = va_arg(ap, int);
-//	printf("op->width : %d\n", op->width);
+	if (*(*format) == '*')
+	{
+		op->width = va_arg(ap, int);		   		
+		if (op->width < 0)
+		{
+			if (op->sign == 0)
+			{
+				op->sign = 1;
+				op->zero = 0;
+			}
+			op->width *= -1;
+		}
+		(*format)++;
+	}
+//	printf("widtg format : %c\n", **format);
+	//		printf("op->width : %d!\n", op->width);
 	return (1);
 }
 
@@ -105,38 +115,39 @@ int				ft_checkvalid(va_list ap, char **format, t_op *op, t_arg *arg)
 {
 	int			chk;
 
-	chk = 0;	
+	chk = 0;
 	while (**format)
 	{
 		if (**format == '%')
 		{
-			ft_reset_op(op);
+			ft_reset_op(op, arg);
 			chk = ft_checkflag(format, op);	
 			if (chk == 0)
 				return (0);
-//			printf("flag ok\n");
-//			printf("op->flag, zero : %d, %d\n", op->sign, op->zero);
+			//			printf("flag ok\n");
+			//			printf("op->flag, zero : %d, %d\n", op->sign, op->zero);
 			chk = ft_checkwidth(ap, format, op);	
 			if (chk == 0)
 				return (0);
-//			printf("width ok\n");
+			//						printf("width ok\n");
 			chk = ft_checkprecision(ap, format, op);
 			if (chk == 0)
 				return (0);	
-//			printf("precision ok\n");
+			//						printf("precision ok\n");
 			chk = ft_checkargtype(format, arg);
 			if (chk == 0)
 				return (0);	
-//			printf("argtype ok\n");
+			//						printf("argtype ok\n");
 			chk = ft_apply_option(ap, op, arg);
 			if (chk == 0)
 				return (0);	
-//			printf("apply_option ok\n");
+			//						printf("apply_option ok\n");
 			(*format)++;
 		}
 		else
 		{
 			ft_putchar_fd(**format, 1);
+			(op->total)++;
 			(*format)++;
 		}
 	}
