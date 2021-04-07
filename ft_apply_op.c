@@ -33,15 +33,11 @@ void			ft_apply_str(va_list ap, t_op *op, t_arg *arg)
 	int			len;
 
 	str = "";
-	if (op->dot == 1)
+	if (op->dot == 0)
 	{
 		str = va_arg(ap, char *);
 		if (str == 0)
-		{
 			str = "(null)";
-			// op->total += 8;
-			// printf("22 %d\n", op->total);
-		}
 	}
 	len = ft_strlen(str);
 	ft_get_blanklen(op, len, arg);
@@ -101,11 +97,14 @@ void			ft_apply_d(va_list ap, t_op *op, t_arg *arg)
 	{
 		nb = va_arg(ap, int);
 		len = ft_get_nbrlen(nb, op);
-		ft_get_blanklen(op, len, arg);		
+		ft_get_blanklen(op, len, arg);	//
 		if (op->sign == 0)
 			ft_putblank(op);
-		ft_putnbr((int)nb, op);
-		if(op->sign == 1)
+		if (op->dot == 1 && nb == 0)
+			;
+		else
+			ft_putnbr((int)nb, op);
+		if (op->sign == 1)
 			ft_putblank(op);
 			//printf ("blank : %d\n",op->blank);
 	}

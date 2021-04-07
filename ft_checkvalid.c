@@ -64,7 +64,8 @@ int				ft_checkprecision(va_list ap, char **format, t_op *op)
 		{
 			if (**format == '*')
 			{
-				op->precision = va_arg(ap, int);				
+				op->precision = va_arg(ap, int);
+				op->p_ast = 1;		
 				(*format)++;
 			}	
 			while (**format >= '0' && **format <= '9')
@@ -73,10 +74,10 @@ int				ft_checkprecision(va_list ap, char **format, t_op *op)
 				(*format)++;
 			}
 			if (op->precision == 0)
-				op->dot = 0;			
+			 	op->dot = 1;			
 		}
 		else
-			op->dot = 0;
+			op->dot = 1;
 	}
 	else
 		op->nodot = 1;
@@ -87,7 +88,7 @@ int				ft_checkprecision(va_list ap, char **format, t_op *op)
 int			ft_checkwidth(va_list ap, char **format, t_op *op)
 {
 	//		printf("check format in width %c\n", **format);
-	while (((**format >= '0') && (**format <= '9')))
+	while (((**format >= '0') && (**format <= '9')))//int형 최대 최소 처리
 	{
 		op->width = (op->width * 10) + (**format) - 48;
 		(*format)++;
@@ -140,7 +141,7 @@ int				ft_checkvalid(va_list ap, char **format, t_op *op, t_arg *arg)
 			//						printf("argtype ok\n");
 			chk = ft_apply_option(ap, op, arg);
 			if (chk == 0)
-				return (0);	
+				return (-1);	
 			//						printf("apply_option ok\n");
 			(*format)++;
 		}

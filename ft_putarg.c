@@ -38,9 +38,10 @@ void		ft_reset_op(t_op *op, t_arg *arg)
 	op->zerolen = 0;
 	op->width = 0;
 	op->precision = 0;
+	op->p_ast = 0;
 	op->blank = 0;
 	op->total = 0;
-	op->dot = 1;
+	op->dot = 0;
 	op->nodot = 0;
 	arg->c = 0;
 	arg->s = 0;

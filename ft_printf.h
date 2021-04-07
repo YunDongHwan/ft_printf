@@ -31,6 +31,8 @@ typedef struct	s_op
 	int			nodot;
 	int			blank;
 	int			total;
+	int			p_ast;
+	int			big[2];
 }				t_op;
 
 typedef struct	s_arg
