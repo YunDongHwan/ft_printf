@@ -19,13 +19,13 @@ int			ft_printf(const char *format, ...)
 	t_arg	arg;
 	int		chk;
 	char	*temp_format;
-	
+
 	if (!format)
-		return (0);		
+		return (0);
 	chk = 0;
 	va_start(ap, format);
 	temp_format = (char *)format;
-    chk = ft_checkvalid(ap, &temp_format, &op, &arg);
+	chk = ft_checkvalid(ap, &temp_format, &op, &arg);
 	if (chk == -1)
 		return (-1);
 	return (op.total);

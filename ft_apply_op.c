@@ -23,8 +23,27 @@ void			ft_apply_char(va_list ap, t_op *op, t_arg *arg)
 		ft_putblank(op);
 	ft_putchar_fd(c, 1);
 	op->total += 1;
-	if(op->sign == 1)
+	if (op->sign == 1)
 		ft_putblank(op);
+}
+
+void			ft_casestr_precision(t_op *op, int len, char *str)
+{
+	if (op->precision > 0 && op->precision < len)
+	{
+		while (op->precision > 0)
+		{
+			ft_putchar_fd(*str, 1);
+			str++;
+			op->total++;
+			op->precision--;
+		}
+	}
+	else
+	{
+		ft_putstr_fd(str, 1);
+		op->total += len;
+	}
 }
 
 void			ft_apply_str(va_list ap, t_op *op, t_arg *arg)
@@ -43,38 +62,24 @@ void			ft_apply_str(va_list ap, t_op *op, t_arg *arg)
 	ft_get_blanklen(op, len, arg);
 	if (op->sign == 0)
 		ft_putblank(op);
-	if (op->precision > 0 && op->precision < len)
-	{		
-		while (op->precision > 0)
-		{
-			ft_putchar_fd(*str, 1);
-			str++;
-			op->total++;
-			op->precision--;			
-		}
-	}
-	else
-	{
-		ft_putstr_fd(str, 1);
-		op->total += len;
-	}
-	if(op->sign == 1)
+	ft_casestr_precision(op, len, str);
+	if (op->sign == 1)
 		ft_putblank(op);
 }
 
 void			ft_apply_pnt(va_list ap, t_op *op, t_arg *arg)
 {
-	size_t 		p;
+	size_t		p;
 	char		*temp;
 	char		*addr;
 	int			len;
 
-	p = va_arg(ap, size_t);	
+	p = va_arg(ap, size_t);
 	temp = ft_change_hex(p, arg, op);
 	if (arg->p == 1)
 		addr = ft_strjoin("0x", temp);
 	else
-		addr = ft_strjoin("0X", temp);	
+		addr = ft_strjoin("0X", temp);
 	free(temp);
 	op->precision = 0;
 	len = ft_strlen(addr);
@@ -84,12 +89,12 @@ void			ft_apply_pnt(va_list ap, t_op *op, t_arg *arg)
 		ft_putblank(op);
 	ft_putstr_fd(addr, 1);
 	free(addr);
-	if(op->sign == 1)
-		ft_putblank(op);		
+	if (op->sign == 1)
+		ft_putblank(op);
 }
 
 int				ft_apply_option(va_list ap, t_op *op, t_arg *arg)
-{	
+{
 	if (arg->c == 1)
 		ft_apply_char(ap, op, arg);
 	else if (arg->s == 1)
@@ -102,8 +107,8 @@ int				ft_apply_option(va_list ap, t_op *op, t_arg *arg)
 		ft_apply_i(ap, op, arg);
 	else if (arg->u == 1)
 		ft_apply_u(ap, op, arg);
-	else if (arg->x == 1 || arg->X == 1)
-		ft_apply_x(ap, op, arg);	
+	else if (arg->x == 1 || arg->bigx == 1)
+		ft_apply_x(ap, op, arg);
 	else if (arg->per == 1)
 		ft_apply_per(op, arg);
 	else

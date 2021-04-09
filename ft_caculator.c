@@ -27,9 +27,8 @@ int			ft_get_hexlen(size_t p)
 	count = 0;
 	while (p > 0)
 	{
-	//s	printf("%zu %d\n", p, count);
 		p /= 16;
-		count++;		
+		count++;
 	}
 	return (count);
 }
@@ -39,14 +38,14 @@ char		*ft_change_hex(size_t p, t_arg *arg, t_op *op)
 	char	*hex;
 	int		len;
 	char	*x;
-	char	*X;
+	char	*bigx;
 
 	x = "0123456789abcdef";
-	X = "0123456789ABCDEF";
+	bigx = "0123456789ABCDEF";
 	len = ft_get_hexlen(p);
 	hex = (char *)ft_calloc(sizeof(char), len + 1);
 	if (!hex)
-		return (NULL);		
+		return (NULL);
 	if (p == 0 && op->dot == 0)
 	{
 		hex = ft_strdup("0");
@@ -55,21 +54,16 @@ char		*ft_change_hex(size_t p, t_arg *arg, t_op *op)
 	while (--len >= 0)
 	{
 		if (arg->x == 1 || arg->p == 1)
-		{
 			hex[len] = x[p % 16];
-			p /= 16;
-		}
-		else if (arg->X == 1)
-		{
-			hex[len] = X[p % 16];
-			p /= 16;			
-		}
+		else if (arg->bigx == 1)
+			hex[len] = bigx[p % 16];
+		p /= 16;
 	}
 	return (hex);
 }
 
 void		ft_putnbr(ssize_t nb, t_op *op)
-{	
+{
 	if (nb < 0)
 		write(1, "-", 1);
 	if (nb == -2147483648)
@@ -86,7 +80,7 @@ void		ft_putnbr(ssize_t nb, t_op *op)
 	{
 		ft_putnbr(nb / 10, op);
 		ft_putchar_fd(nb % 10 + '0', 1);
-	}	
+	}
 }
 
 void		ft_puthex(t_op *op, char *hex)
@@ -94,7 +88,7 @@ void		ft_puthex(t_op *op, char *hex)
 	int		len;
 
 	len = ft_strlen(hex);
-	ft_putzero(op);	
+	ft_putzero(op);
 	ft_putstr_fd(hex, 1);
 	op->total += len;
 }

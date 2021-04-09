@@ -12,15 +12,15 @@
 
 #include "ft_printf.h"
 
-int			ft_checkargtype(char **format, t_arg *arg)
+int		ft_checkargtype(char **format, t_arg *arg)
 {
 	if (**format == 'c')
 		arg->c = 1;
-	else if ( **format == 's')
+	else if (**format == 's')
 		arg->s = 1;
-	else if (**format == 'p')	
+	else if (**format == 'p')
 		arg->p = 1;
-	else if (**format == 'd')	
+	else if (**format == 'd')
 		arg->d = 1;
 	else if (**format == 'i')
 		arg->i = 1;
@@ -29,7 +29,7 @@ int			ft_checkargtype(char **format, t_arg *arg)
 	else if (**format == 'x')
 		arg->x = 1;
 	else if (**format == 'X')
-		arg->X = 1;
+		arg->bigx = 1;
 	else if (**format == '%')
 		arg->per = 1;
 	else
@@ -37,7 +37,7 @@ int			ft_checkargtype(char **format, t_arg *arg)
 	return (0);
 }
 
-void			ft_checkflag(char **format, t_op *op)
+void	ft_checkflag(char **format, t_op *op)
 {
 	(*format)++;
 	while (**format == '-' || **format == '0')
@@ -46,13 +46,13 @@ void			ft_checkflag(char **format, t_op *op)
 			op->sign = 1;
 		else if (**format == '0')
 			op->zero = 1;
-		(*format)++;		
+		(*format)++;
 	}
 }
 
-int				ft_checkprecision(va_list ap, char **format, t_op *op)
+int		ft_checkprecision(va_list ap, char **format, t_op *op)
 {
-	if (**format == '.') //식별자가 뒤에 없으면 에러처리
+	if (**format == '.')
 	{
 		(*format)++;
 		if ((**format) == '*' || (**format >= '0' && **format <= '9'))
@@ -67,8 +67,7 @@ int				ft_checkprecision(va_list ap, char **format, t_op *op)
 	return (0);
 }
 
-
-int			ft_checkwidth(va_list ap, char **format, t_op *op)
+int		ft_checkwidth(va_list ap, char **format, t_op *op)
 {
 	while (((**format >= '0') && (**format <= '9')))
 	{
@@ -94,8 +93,8 @@ int			ft_checkwidth(va_list ap, char **format, t_op *op)
 	return (0);
 }
 
-int				ft_checkvalid(va_list ap, char **format, t_op *op, t_arg *arg)
-{	
+int		ft_checkvalid(va_list ap, char **format, t_op *op, t_arg *arg)
+{
 	op->total = 0;
 	while (**format)
 	{
