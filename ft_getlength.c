@@ -14,15 +14,22 @@
 
 void		ft_get_blanklen(t_op *op, int arglen, t_arg *arg)
 {		
-	if (arg->c ||  arg->p)
+	if (arg->c ||  arg->p || arg->per)
+	{
 		op->blank = op->width - arglen;
+		if (op->zero == 1 && op->sign == 0)
+		{
+			op->zerolen = op->blank;
+			op->blank = 0;
+		}
+	}
 	else if(arg->s)
 	{
 		op->blank = op->width - arglen;
 		if (op->precision < arglen && op->precision > 0)
 			op->blank += (arglen - op->precision);
 	}	
-	else if (arg->d || arg->u)
+	else if (arg->d || arg->i || arg->u || arg->x || arg->X)
 	{
 		if (op->p_ast == 1 && op->precision < 0) //precision < 0 일때 * 로 받으면 0precion 무시
 			op->precision = 0;
@@ -56,39 +63,23 @@ void		ft_get_blanklen(t_op *op, int arglen, t_arg *arg)
 				op->blank = op->width - op->precision - op->miner;				
 			}			
 		}		
-		// op->zerolen = op->precision - arglen;	
-		// op->blank = op->width - ft_get_max(op->precision, arglen) - op->miner;	
-		// printf("op->precision : %d\n", op->precision);
-		// printf("arglen : %d\n", arglen);							
-		//printf("op->zerolen : %d\n", op->zerolen);
-		// if ((op->zero == 1 && op->nodot == 1) || (op->p_ast && op->zero))
-		// {
-		// 	op->zerolen = op->width - arglen - op->miner;			
-		// 	op->blank = 0;									
-		// }
-//		else if (op->zero == 1 && op->nodot == 0)
-//			op->blank = op->width - ft_get_max(op->precision, arglen) - op->miner;						
-		// if (op->miner == 1)
-		// {			
-		// 	op->blank -= 1;
-		// }
 	}
 	if (op->blank < 0)
 		op->blank = 0;	
 	if (op->zerolen < 0)
 		op->zerolen = 0;
 	op->total += (op->blank + op->zerolen);		
-	  printf("op->blank : %d\n", op->blank);
-	 printf("op->width : %d\n", op->width);
-	  printf("op->precision : %d\n", op->precision);
-	  printf("op->zerolen : %d\n", op->zerolen);
-	  printf("op->zero : %d\n", op->zero);
-	  printf("arglen : %d\n", arglen);
-	  printf("op->miner : %d\n", op->miner);
+	//   printf("op->blank : %d\n", op->blank);
+	//  printf("op->width : %d\n", op->width);
+	//   printf("op->precision : %d\n", op->precision);
+	//   printf("op->zerolen : %d\n", op->zerolen);
+	//   printf("op->zero : %d\n", op->zero);
+	//   printf("arglen : %d\n", arglen);
+	//   printf("op->miner : %d\n", op->miner);
 }
 
 
-int			ft_get_nbrlen(int nb, t_op *op)
+int			ft_get_nbrlen(ssize_t nb, t_op *op)
 {
 	int		len;
 

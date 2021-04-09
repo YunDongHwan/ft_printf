@@ -14,7 +14,6 @@
 
 int			ft_checkargtype(char **format, t_arg *arg)
 {
-//			printf("check arg foramt : %c\n", **format);
 	if (**format == 'c')
 		arg->c = 1;
 	else if ( **format == 's')
@@ -34,11 +33,11 @@ int			ft_checkargtype(char **format, t_arg *arg)
 	else if (**format == '%')
 		arg->per = 1;
 	else
-		return (0);
-	return (1);
+		return (-1);
+	return (0);
 }
 
-int			ft_checkflag(char **format, t_op *op)
+void			ft_checkflag(char **format, t_op *op)
 {
 	(*format)++;
 	while (**format == '-' || **format == '0')
@@ -49,11 +48,7 @@ int			ft_checkflag(char **format, t_op *op)
 			op->zero = 1;
 		(*format)++;		
 	}
-//	printf("check format in flag %c\n", **format);
-	return (1);
 }
-
-
 
 int				ft_checkprecision(va_list ap, char **format, t_op *op)
 {
@@ -61,34 +56,21 @@ int				ft_checkprecision(va_list ap, char **format, t_op *op)
 	{
 		(*format)++;
 		if ((**format) == '*' || (**format >= '0' && **format <= '9'))
-		{
-			if (**format == '*')
-			{
-				op->precision = va_arg(ap, int);
-				op->p_ast = 1;		
-				(*format)++;
-			}	
-			while (**format >= '0' && **format <= '9')
-			{
-				op->precision = (op->precision * 10) + **format - 48;
-				(*format)++;
-			}
-			if (op->precision == 0)
-			 	op->dot = 1;			
-		}
+			ft_putprecision(op, format, ap);
 		else
 			op->dot = 1;
 	}
 	else
 		op->nodot = 1;
-	return (1);
+	if (op->width >= 2147483647)
+		return (-1);
+	return (0);
 }
 
 
 int			ft_checkwidth(va_list ap, char **format, t_op *op)
 {
-	//		printf("check format in width %c\n", **format);
-	while (((**format >= '0') && (**format <= '9')))//int형 최대 최소 처리
+	while (((**format >= '0') && (**format <= '9')))
 	{
 		op->width = (op->width * 10) + (**format) - 48;
 		(*format)++;
@@ -107,42 +89,26 @@ int			ft_checkwidth(va_list ap, char **format, t_op *op)
 		}
 		(*format)++;
 	}
-//	printf("widtg format : %c\n", **format);
-	//		printf("op->width : %d!\n", op->width);
-	return (1);
+	if (op->width >= 2147483647)	
+		return (-1);
+	return (0);
 }
 
 int				ft_checkvalid(va_list ap, char **format, t_op *op, t_arg *arg)
-{
-	int			chk;
-
-	chk = 0;
+{	
+	op->total = 0;
 	while (**format)
 	{
 		if (**format == '%')
 		{
 			ft_reset_op(op, arg);
-			chk = ft_checkflag(format, op);	
-			if (chk == 0)
-				return (0);
-			//			printf("flag ok\n");
-			//			printf("op->flag, zero : %d, %d\n", op->sign, op->zero);
-			chk = ft_checkwidth(ap, format, op);	
-			if (chk == 0)
-				return (0);
-			//						printf("width ok\n");
-			chk = ft_checkprecision(ap, format, op);
-			if (chk == 0)
-				return (0);	
-			//						printf("precision ok\n");
-			chk = ft_checkargtype(format, arg);
-			if (chk == 0)
-				return (0);	
-			//						printf("argtype ok\n");
-			chk = ft_apply_option(ap, op, arg);
-			if (chk == 0)
+			ft_checkflag(format, op);				
+			op->chk = ft_checkwidth(ap, format, op);				
+			op->chk = ft_checkprecision(ap, format, op);		
+			op->chk = ft_checkargtype(format, arg);
+			op->chk = ft_apply_option(ap, op, arg);
+			if (op->chk == -1)
 				return (-1);	
-			//						printf("apply_option ok\n");
 			(*format)++;
 		}
 		else
