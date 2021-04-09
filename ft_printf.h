@@ -74,15 +74,28 @@ void			ft_puthex(t_op *op, char *hex);
 void			ft_get_blanklen(t_op *op, int arglen, t_arg *arg);
 int				ft_get_nbrlen(ssize_t nb, t_op *op);
 
-//ft_putarg.c
+//ft_getlen_utils.c
+void        ft_case_cpper(t_op *op, int arglen);
+void        ft_case_str(t_op *op, int arglen);
+void        ft_case_arglenbig(t_op *op, int arglen);
+void        ft_case_precisionbig(t_op *op, int arglen);
+
+//ft_putflag
 void			ft_putblank(t_op *op);
 void			ft_putzero(t_op *op);
 void			ft_reset_op(t_op *op, t_arg *arg);
 
-//ft_utils.c
-void        ft_putprecision(t_op *op, char **format, va_list ap);
-void        ft_putargd(t_op *op, int nb);
-void        ft_putargu(t_op *op, unsigned int nb);
-void        ft_putargx(t_op *op, char *hex);
+//ft_put_utils.c
+void			ft_putprecision(t_op *op, char **format, va_list ap);
+void			ft_putargd(t_op *op, int nb);
+void			ft_putargu(t_op *op, unsigned int nb);
+void			ft_putargx(t_op *op, char *hex);
+
+//ft_apply_numop.c
+void			ft_apply_per(t_op *op, t_arg *arg);
+void			ft_apply_i(va_list ap, t_op *op, t_arg *arg);
+void			ft_apply_u(va_list ap, t_op *op, t_arg *arg);
+void			ft_apply_x(va_list ap, t_op *op, t_arg *arg);
+void			ft_apply_d(va_list ap, t_op *op, t_arg *arg);
 
 #endif

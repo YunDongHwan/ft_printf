@@ -16,18 +16,20 @@ void		ft_get_blanklen(t_op *op, int arglen, t_arg *arg)
 {		
 	if (arg->c ||  arg->p || arg->per)
 	{
-		op->blank = op->width - arglen;
-		if (op->zero == 1 && op->sign == 0)
-		{
-			op->zerolen = op->blank;
-			op->blank = 0;
-		}
+		ft_case_cpper(op, arglen);
+		// op->blank = op->width - arglen;
+		// if (op->zero == 1 && op->sign == 0)
+		// {
+		// 	op->zerolen = op->blank;
+		// 	op->blank = 0;
+		// }
 	}
 	else if(arg->s)
 	{
-		op->blank = op->width - arglen;
-		if (op->precision < arglen && op->precision > 0)
-			op->blank += (arglen - op->precision);
+		ft_case_str(op, arglen);
+		// op->blank = op->width - arglen;
+		// if (op->precision < arglen && op->precision > 0)
+		// 	op->blank += (arglen - op->precision);
 	}	
 	else if (arg->d || arg->i || arg->u || arg->x || arg->X)
 	{
@@ -36,46 +38,41 @@ void		ft_get_blanklen(t_op *op, int arglen, t_arg *arg)
 		op->big[0]	= ft_get_max(arglen, op->precision);
 		if (op->big[0] == 0)
 		{
-			op->zerolen = 0;
-			op->big[1]	 = ft_get_max(arglen, op->width);
-			if (op->big[1] == 0)
-				op->blank = 0;
-			else
-			{				
-				op->blank = op->width - arglen - op->miner;
-				if (op->zero == 1 && op->dot == 0 && op->precision == 0)//precision < 0 일때 * 로 받으면 0precion 무시후 0 플래그 적용
-				{
-					op->zerolen = op->blank;
-					op->blank = 0;
-				}				
-			}
+			ft_case_arglenbig(op, arglen);
+			// op->zerolen = 0;
+			// op->big[1]	 = ft_get_max(arglen, op->width);
+			// if (op->big[1] == 0)
+			// 	op->blank = 0;
+			// else
+			// {				
+			// 	op->blank = op->width - arglen - op->miner;
+			// 	if (op->zero == 1 && op->dot == 0 && op->precision == 0)//precision < 0 일때 * 로 받으면 0precion 무시후 0 플래그 적용
+			// 	{
+			// 		op->zerolen = op->blank;
+			// 		op->blank = 0;
+			// 	}				
+			// }
 		}
 		else
 		{
-			op->zerolen = op->precision - arglen;
-			op->big[1]	 = ft_get_max(op->precision, op->width);
-			if (op->big[1] == 0)
-			{
-				op->blank = 0;
-			}
-			else
-			{
-				op->blank = op->width - op->precision - op->miner;				
-			}			
+			ft_case_precisionbig(op, arglen);
+			// op->zerolen = op->precision - arglen;
+			// op->big[1]	 = ft_get_max(op->precision, op->width);
+			// if (op->big[1] == 0)
+			// {
+			// 	op->blank = 0;
+			// }
+			// else
+			// {
+			// 	op->blank = op->width - op->precision - op->miner;				
+			// }			
 		}		
 	}
 	if (op->blank < 0)
 		op->blank = 0;	
 	if (op->zerolen < 0)
 		op->zerolen = 0;
-	op->total += (op->blank + op->zerolen);		
-	//   printf("op->blank : %d\n", op->blank);
-	//  printf("op->width : %d\n", op->width);
-	//   printf("op->precision : %d\n", op->precision);
-	//   printf("op->zerolen : %d\n", op->zerolen);
-	//   printf("op->zero : %d\n", op->zero);
-	//   printf("arglen : %d\n", arglen);
-	//   printf("op->miner : %d\n", op->miner);
+	op->total += (op->blank + op->zerolen);
 }
 
 

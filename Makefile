@@ -2,10 +2,16 @@ NAME =					libftprintf.a
 
 SRC_NAME =				ft_caculator.c\
 						ft_getlength.c\
+						ft_getlen_utils.c\
 						ft_apply_op.c\
+						ft_apply_numop.c\
 						ft_checkvalid.c\
 						ft_printf.c\
-						ft_putarg.c\
+						ft_putflag.c\
+						ft_put_utils.c\
+						
+						
+
 
 
 OBJ_NAME =				$(SRC_NAME:.c=.o)

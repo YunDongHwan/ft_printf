@@ -77,7 +77,7 @@ int			ft_checkwidth(va_list ap, char **format, t_op *op)
 	}
 	if (*(*format) == '*')
 	{
-		op->width = va_arg(ap, int);		   		
+		op->width = va_arg(ap, int);
 		if (op->width < 0)
 		{
 			if (op->sign == 0)
@@ -89,7 +89,7 @@ int			ft_checkwidth(va_list ap, char **format, t_op *op)
 		}
 		(*format)++;
 	}
-	if (op->width >= 2147483647)	
+	if (op->width >= 2147483647)
 		return (-1);
 	return (0);
 }
@@ -102,13 +102,13 @@ int				ft_checkvalid(va_list ap, char **format, t_op *op, t_arg *arg)
 		if (**format == '%')
 		{
 			ft_reset_op(op, arg);
-			ft_checkflag(format, op);				
-			op->chk = ft_checkwidth(ap, format, op);				
-			op->chk = ft_checkprecision(ap, format, op);		
+			ft_checkflag(format, op);
+			op->chk = ft_checkwidth(ap, format, op);
+			op->chk = ft_checkprecision(ap, format, op);
 			op->chk = ft_checkargtype(format, arg);
 			op->chk = ft_apply_option(ap, op, arg);
 			if (op->chk == -1)
-				return (-1);	
+				return (-1);
 			(*format)++;
 		}
 		else
